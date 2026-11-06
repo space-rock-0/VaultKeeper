@@ -152,7 +152,7 @@ export async function googleLogin(req: Request, res: Response): Promise<void> {
     if (!user) {
       const existing = await prisma.user.findUnique({ where: { email: identity.email } });
       if (existing) {
-        res.status(409).json({ message: "This email already has an account. Sign in with your password. Google account linking is not enabled." });
+        res.status(409).json({ message: "This email already has an account. Sign in with your password, then connect Google in Account security." });
         return;
       }
       user = await prisma.user.create({ data: { email: identity.email, googleId: identity.sub } });
@@ -166,6 +166,48 @@ export async function googleLogin(req: Request, res: Response): Promise<void> {
       return;
     }
     respondToAuthFailure(error, res, "Unable to sign in with Google.");
+  }
+}
+
+export async function linkGoogle(req: Request, res: Response): Promise<void> {
+  if (!req.user) { res.status(401).json({ message: "Unauthorized." }); return; }
+  const audience = process.env.GOOGLE_CLIENT_ID;
+  if (!audience) { res.status(503).json({ message: "Google sign-in is not configured yet." }); return; }
+  const credential: unknown = req.body?.credential;
+  if (typeof credential !== "string" || !credential || credential.length > 12000) {
+    res.status(400).json({ message: "A Google sign-in credential is required." }); return;
+  }
+  let identity;
+  try {
+    const ticket = await googleClient.verifyIdToken({ idToken: credential, audience });
+    identity = ticket.getPayload();
+    if (!identity?.sub || !identity.email || identity.email_verified !== true) {
+      res.status(401).json({ message: "Use a Google account with a verified email address." }); return;
+    }
+  } catch {
+    res.status(401).json({ message: "Google sign-in could not be verified. Please try again." }); return;
+  }
+  try {
+    const googleId = identity.sub;
+    const googleEmail = identity.email;
+    const linked = await prisma.$transaction(async (tx) => {
+      await lockUser(tx, req.user!.userId);
+      const current = await tx.user.findUnique({ where: { id: req.user!.userId } });
+      if (!current) throw new PasswordActionError(401, "Unauthorized.");
+      if (current.email.toLowerCase() !== googleEmail.toLowerCase()) throw new PasswordActionError(409, "Choose the Google account with the same email address.");
+      if (current.googleId && current.googleId !== googleId) throw new PasswordActionError(409, "A different Google account is already connected.");
+      const owner = await tx.user.findUnique({ where: { googleId } });
+      if (owner && owner.id !== current.id) throw new PasswordActionError(409, "This Google account is connected to another user.");
+      if (current.googleId) return current;
+      return tx.user.update({ where: { id: current.id }, data: { googleId } });
+    });
+    res.json({ message: "Google account connected.", user: { userId: linked.id, email: linked.email, hasPassword: Boolean(linked.passwordHash), googleLinked: true, updatedAt: linked.updatedAt, passwordChangedAt: linked.passwordChangedAt } });
+  } catch (error) {
+    if (error instanceof PasswordActionError) { res.status(error.status).json({ message: error.message }); return; }
+    if (typeof error === "object" && error !== null && "code" in error && error.code === "P2002") {
+      res.status(409).json({ message: "This Google account is connected to another user." }); return;
+    }
+    respondToAuthFailure(error, res, "Unable to connect Google account.");
   }
 }
 

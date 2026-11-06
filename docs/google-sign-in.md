@@ -21,6 +21,6 @@
 
 The client sends `{ credential }` to `POST /api/auth/google`. The API verifies the ID token using Google's library, including signature, expiry, issuer, audience, and verified email. Users are identified by Google's immutable subject (`googleId`). It issues the same in-memory access token and HttpOnly refresh cookie as password login.
 
-Existing password accounts are not automatically linked by matching email. Users with those accounts should continue signing in with their password. Linking Google to a password account requires a separate authenticated account-linking feature.
+Existing password accounts are not automatically linked by matching email. Users with those accounts sign in with their password, open Account security, and connect a Google account with the same verified email. The linking endpoint requires an authenticated session and verifies the Google ID token before attaching its immutable subject to the account.
 
 Google credentials and access tokens are never saved in browser storage. Do not place any client secret in a `VITE_` variable. Until the public client ID is configured, password login remains available and Google login is disabled.
