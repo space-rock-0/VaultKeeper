@@ -8,6 +8,8 @@ services:
     envVars:
       - key: NODE_ENV
         value: production
+      - key: NPM_CONFIG_INCLUDE
+        value: dev
       - key: DATABASE_URL
         sync: false
       - key: DIRECT_URL
