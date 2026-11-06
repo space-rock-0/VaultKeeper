@@ -1,0 +1,98 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/400-normal-00a71b82066f.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset2'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/400-normal-3d7ba9fa085b.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset3'; font-style: normal; font-weight: 400; font-display: swap; src: url('/fonts/400-normal-8c243ab2f4ee.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/500-normal-164a8ad13b6b.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset2'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/500-normal-6105206f44b2.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset3'; font-style: normal; font-weight: 500; font-display: swap; src: url('/fonts/500-normal-7a7bc89dd08e.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/600-normal-72bd2a80526c.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset2'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/600-normal-b96ae79e8f49.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset3'; font-style: normal; font-weight: 600; font-display: swap; src: url('/fonts/600-normal-d34051b94fd7.woff2') format('woff2'); }
+@font-face { font-family: 'Poppins'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/700-normal-9403d1a05f95.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset2'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/700-normal-d40744cb4255.woff2') format('woff2'); }
+@font-face { font-family: 'PoppinsSubset3'; font-style: normal; font-weight: 700; font-display: swap; src: url('/fonts/700-normal-d9fbf4c0bc98.woff2') format('woff2'); }
+
+
+:root {
+  font-family: 'Poppins', 'PoppinsSubset2', 'PoppinsSubset3', sans-serif;
+  color: #0F172A;
+  background: #F7F8FA;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --brand-primary: #5929D0;
+  --brand-tint: #E8E5FF;
+  --brand-border: #9B8EDE;
+  --brand-accent: #CF008B;
+  --surface: #fff;
+  --canvas: #F7F8FA;
+  --line: #E2E8F0;
+}
+body { margin: 0; min-width: 320px; min-height: 100dvh; }
+button, a, input, select, summary { -webkit-tap-highlight-color: transparent; }
+button { touch-action: manipulation; }
+button:not(:disabled), summary { cursor: pointer; }
+button:not(:disabled):active { transform: scale(.98); }
+button { min-height: 44px; border-radius: 999px !important; transition: background-color .16s, color .16s, box-shadow .16s, transform .16s; }
+button:focus-visible, summary:focus-visible, a:focus-visible { outline: 3px solid #9B8EDE; outline-offset: 3px; }
+input:not([type=checkbox]):not([type=range]), select { min-height: 44px; border-radius: 6px !important; }
+input[type=checkbox], input[type=range] { accent-color: var(--brand-primary); }
+h1, h2, h3 { text-wrap: balance; }
+@layer components {
+  .form-control { @apply mt-1.5 w-full border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 outline-none transition placeholder:text-slate-400 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500/15 dark:border-white/10 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500; }
+}
+.vault-shell { background: var(--canvas); }
+.vault-container { max-width: 1440px; }
+.vault-header { background: var(--surface); margin-inline: -32px; padding-inline: 32px; }
+.brand-wordmark-text { font-size: 18px; font-weight: 600; letter-spacing: -.6px; }
+.brand-wordmark-text small { display: block; font-size: 10px; letter-spacing: .05em; font-weight: 400; color: #64748B; margin-top: 1px; }
+.vault-intro { padding: 30px 32px 0; border: 1px solid #E8E5FF; border-radius: 12px; background: linear-gradient(115deg,#EDE9FF 0%,#F5EEFF 55%,#FFF 100%); }
+.vault-intro h1 { font-size: 32px; line-height: 1.2; font-weight: 600; letter-spacing: -1px; }
+.vault-intro p:first-child { letter-spacing: .08em; font-size: 11px; }
+.vault-stats { border-top: 1px solid rgba(155,142,222,.25); }
+.vault-stats > div { border: 0; border-radius: 0; background: transparent; padding: 22px 0; }
+.vault-stats > div + div { padding-left: 28px; border-left: 1px solid rgba(155,142,222,.25); }
+.vault-stats > div:not(:last-child) { padding-right: 28px; }
+.vault-stats > div p:last-child { font-size: 12px; }
+.vault-workspace > div > div:first-child h2 { font-size: 20px; }
+.vault-workspace > div > div:nth-child(2) { margin-bottom: 20px; }
+.vault-workspace input[placeholder="Search accounts"] { border-radius: 999px !important; background: white; }
+.vault-row { box-shadow: 0 1px 2px rgba(15,23,42,.025); padding: 22px; }
+.vault-row:hover { border-color: var(--brand-border); }
+.vault-row h3 { font-size: 15px; }
+.vault-row button { min-width: 44px; }
+.vault-row code { font-size: 14px; letter-spacing: 1px; }
+.generator-card { border-radius: 12px; box-shadow: 0 2px 8px rgba(89,41,208,.04); border-color: #E2E8F0; position: relative; overflow: hidden; }
+.generator-card::before { content: ''; position: absolute; inset: 0 0 auto; height: 3px; background: linear-gradient(90deg,#A855F7,#6B8EF0,#01CAB8); }
+.generator-card code { font-size: 13px; }
+[role=dialog] { border-radius: 20px !important; }
+.auth-layout { display: grid; min-height: 100dvh; grid-template-columns: minmax(0,1fr) minmax(0,1fr); background: white; }
+.auth-brand { display: flex; flex-direction: column; padding: 44px 64px; background: linear-gradient(145deg,#EDE9FF 0%,#F5EEFF 45%,#FFE4F7 85%,#FFF 100%); border-right: 1px solid #E8E5FF; }
+.brand-wordmark { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; font-size: 19px; letter-spacing: -.7px; font-weight: 600; }
+.brand-mark { display: grid; place-items: center; height: 44px; width: 44px; border-radius: 12px; color: white; background: var(--brand-primary); }
+.brand-product { flex-basis: 100%; padding-left: 54px; margin-top: -12px; font-size: 10px; color: #64748B; font-weight: 400; letter-spacing: .04em; }
+.auth-brand-content { margin-block: auto; padding-block: 72px; max-width: 480px; }
+.brand-eyebrow { font-size: 12px; font-weight: 500; color: var(--brand-primary); }
+.auth-brand-content h2 { font-size: clamp(32px,3.5vw,52px); font-weight: 600; line-height: 1.18; letter-spacing: -1.7px; margin: 18px 0; }
+.auth-brand-content > p { max-width: 380px; color: #475569; line-height: 1.8; font-size: 14px; }
+.auth-preview { display: flex; align-items: center; gap: 16px; padding: 22px; margin-top: 40px; border: 1px solid rgba(155,142,222,.35); border-radius: 12px; background: rgba(255,255,255,.75); box-shadow: 0 12px 32px rgba(89,41,208,.06); }
+.auth-preview-icon { color: var(--brand-primary); padding: 12px; border-radius: 12px; background: #E8E5FF; }
+.auth-preview strong { display: block; font-size: 14px; font-weight: 600; }
+.auth-preview span { display: block; font-size: 11px; color: #64748B; margin-top: 5px; }
+.auth-preview > svg { margin-left: auto; color: #9B8EDE; }
+.auth-brand-foot { display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748B; }
+.auth-form-area { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 48px 32px; }
+.auth-card { width: 100%; max-width: 410px; }
+.auth-card h1 { font-size: 28px; line-height: 1.3; font-weight: 600; letter-spacing: -.8px; }
+.auth-card input { box-shadow: none; }
+.auth-card > div:first-child p:first-child { letter-spacing: .07em; font-size: 11px; }
+.auth-form-foot { font-size: 11px; margin-top: 48px; color: #64748B; text-align: center; }
+@media(min-width:1440px) { .vault-header { border-inline: 1px solid var(--line); } }
+@media(max-width:1023px) { .auth-brand { padding: 32px; } .vault-header { margin-inline: -24px; padding-inline: 24px; } }
+@media(max-width:767px) { .auth-layout { grid-template-columns: 1fr; } .auth-brand { padding: 24px; border-right: 0; border-bottom: 1px solid #E8E5FF; } .auth-brand-content, .auth-brand-foot { display: none; } .auth-form-area { padding: 36px 24px; } .vault-intro { padding: 24px 20px 0; } .vault-header { margin-inline: -16px; padding-inline: 16px; } .vault-stats > div + div { padding-left: 0; border-left: 0; border-top: 1px solid rgba(155,142,222,.25); } .vault-stats > div { padding-block: 16px; } .vault-row { padding: 16px; } }
+@media(prefers-color-scheme:dark) { :root { --canvas:#0F172A; --surface:#1E293B; --line:#334155; color:#F1F5F9; background:#0F172A; } .vault-intro { background: linear-gradient(110deg,#231B40,#1E293B); border-color:#453762; } .auth-layout { background:#0F172A; } .auth-card h1 { color:#F1F5F9; } .auth-card label { color:#CBD5E1; } .auth-card input { background:#1E293B; color:#F1F5F9; border-color:#475569; } .auth-card p { color:#94A3B8; } .auth-brand { background:linear-gradient(145deg,#24173E,#302444,#1E293B); border-color:#453762; color:#F1F5F9; } .auth-brand-content > p { color:#CBD5E1; } .auth-preview { background:#1E293B; border-color:#453762; } .auth-preview-icon { background:#35265B; color:#C4B5FD; } .vault-workspace input[placeholder="Search accounts"] { background:#1E293B; } }
+@media(prefers-reduced-motion:reduce) { *, *::before, *::after { animation-duration:.01ms !important; transition-duration:.01ms !important; scroll-behavior:auto !important; } button:not(:disabled):active { transform:none; } }
+
+
+.password-visibility-toggle:not(:disabled):active { transform: translateY(-50%) scale(.98); }

@@ -1,0 +1,28 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": [
+      "ES2022"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "esModuleInterop": true,
+    "strict": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "composite": true,
+    "allowImportingTsExtensions": true
+  },
+  "include": [
+    "src/server.ts",
+    "src/app.ts",
+    "src/controllers/**/*.ts",
+    "src/middleware/**/*.ts",
+    "src/utils/**/*.ts",
+    "src/config/**/*.ts",
+    "src/routes/**/*.ts",
+    "src/db/**/*.ts",
+    "src/services/**/*.ts",
+    "src/emails/**/*.ts"
+  ]
+}

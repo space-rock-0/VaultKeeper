@@ -1,0 +1,105 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+enum RenewalInterval {
+  WEEKLY
+  MONTHLY
+  YEARLY
+  CUSTOM
+}
+
+model User {
+  id             String          @id @default(uuid()) @db.Uuid
+  email          String          @unique
+  passwordHash   String?
+  googleId       String?         @unique
+  authVersion    Int             @default(0)
+  passwordChangedAt DateTime?
+  passwordChallenges PasswordChallenge[]
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+  refreshTokens  RefreshToken[]
+  passwordVaults PasswordVault[]
+}
+
+model RefreshToken {
+  id         String   @id @default(uuid()) @db.Uuid
+  token      String   @unique
+  userId     String   @db.Uuid
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  consumedAt DateTime?
+
+  @@index([userId])
+}
+
+model PasswordVault {
+  id                String          @id @default(uuid()) @db.Uuid
+  userId            String          @db.Uuid
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  siteName          String
+  siteUrl           String?
+  username          String
+  encryptedPassword String
+  iv                String          @unique
+  authTag           String
+  renewalInterval   RenewalInterval @default(MONTHLY)
+  expiresAt         DateTime        @default(dbgenerated("(CURRENT_TIMESTAMP + INTERVAL '30 days')"))
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+
+// One challenge per account/purpose. Resends replace the hash, never store the code.
+enum PasswordChallengePurpose {
+  RECOVERY
+  SET_PASSWORD
+}
+
+model PasswordChallenge {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String   @db.Uuid
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  purpose        PasswordChallengePurpose
+  otpHash        String
+  failedAttempts Int      @default(0)
+  expiresAt      DateTime
+  lastSentAt     DateTime
+  verifiedAt     DateTime?
+  grantHash      String?  @unique
+  grantExpiresAt DateTime?
+  consumedAt     DateTime?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+  emails         PasswordEmail[]
+
+  @@unique([userId, purpose])
+  @@index([expiresAt])
+}
+
+// Durable outbox: OTP is AES-GCM encrypted until delivery; no raw code is persisted.
+model PasswordEmail {
+  id            String @id @default(uuid()) @db.Uuid
+  challengeId   String @db.Uuid
+  challenge     PasswordChallenge @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  ciphertext    String
+  iv            String
+  authTag       String
+  attempts      Int @default(0)
+  expiresAt     DateTime
+  nextAttemptAt DateTime @default(now())
+  leaseUntil    DateTime?
+  createdAt     DateTime @default(now())
+  @@index([nextAttemptAt])
+}
