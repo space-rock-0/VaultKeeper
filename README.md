@@ -18,6 +18,8 @@ Frontend: http://localhost:5173. API: http://localhost:5000/api.
 
 The password vault encrypts passwords with AES-256-GCM. Configure ENCRYPTION_KEY as 64 random hexadecimal characters and back it up securely; losing it makes vault passwords unrecoverable. The API validates browser `Origin` headers on auth POST routes, applies no-store and baseline security headers, and limits JSON bodies to 16 KB. Set `FRONTEND_URL` to the exact allowed origins and use distinct random token secrets of at least 32 characters. If deployed behind a trusted reverse proxy, set `TRUST_PROXY_HOPS` to its exact hop count so rate limits use client IP addresses safely. The built-in rate-limit store is in-memory and is suitable only for a single API process; use a shared store before running multiple instances.
 
+Password login rate limiting counts failed credential responses per normalized email. Successful logins and temporary server errors do not consume the five-attempt window. The limiter uses in-memory storage, so use a shared store before running multiple API instances.
+
 ## Verification
 
 - `npm run build`: frontend TypeScript and production bundle.
